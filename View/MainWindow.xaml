@@ -7,6 +7,30 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="6*"/>
+        </Grid.RowDefinitions>
+        <Menu x:Name="SystemMenu">
+            <MenuItem Header="Файл" Padding="6" HorizontalAlignment="Left">
+                <MenuItem Header="Открыть"/>
+                <MenuItem Header="Сохранить"/>
+            </MenuItem>
+            <MenuItem Header="Справка" />
+            <Separator></Separator>
+            <MenuItem Header="Запустить" />
+            <MenuItem Header="Завершить" />
+        </Menu>
+        <TextBox Grid.Row="1">Условие задачи:</TextBox>
+        <DockPanel x:Name="AlphabetPanel" Grid.Row="4">
+            <Label VerticalContentAlignment="Center"
+                   HorizontalContentAlignment="center" Content="Символы алфавита: "/>
+            <TextBox VerticalContentAlignment="center"/>
+        </DockPanel>
     </Grid>
 </Window>

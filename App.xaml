@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:TuringMachine"
              StartupUri="View/MainWindow.xaml">
     <Application.Resources>
-         
+        <Style x:Key="MenuButton" TargetType="Button">
+            <Setter Property="Padding" Value="5"/>
+        </Style>
     </Application.Resources>
 </Application>
