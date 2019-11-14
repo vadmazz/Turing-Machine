@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 using TuringMachine.Model;
 
@@ -8,10 +9,18 @@ namespace TuringMachine.ViewModel
 {
     class MainWindowViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<SlideCell> Cells { get; set; } = new ObservableCollection<SlideCell>();
-        private SlideControl _slideController;
+        private Slide _slide;
+        public ObservableCollection<SlideCell> Cells => _slide.Cells;
+
+        private Visibility _slideVisibility = Visibility.Visible,Hidden;
+        public Visibility SlideVisibility
+        {
+            get { return _slideVisibility; }
+            set { _slideVisibility = value; OnPropertyChanged("SlideVisibility"); }
+        }
+
         public ICommand MoveRightCommand { get; private set; }
-        public ICommand MoveLeftCommand { get; private set; }
+        public ICommand MoveLeftCommand { get; private set; }        
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
@@ -21,14 +30,11 @@ namespace TuringMachine.ViewModel
         }
 
         public MainWindowViewModel()
-        {            
-            for (int i = -10; i <= 10; i++)//TODO:сделать перемещение катерки клкиками на кнопку
-            {
-                Cells.Add(new SlideCell { Number = i });                
-            }
-            _slideController = new SlideControl(Cells);
-            MoveRightCommand = new RelayCommand(_slideController.MoveRight);
-            MoveLeftCommand = new RelayCommand(_slideController.MoveLeft);
-        }   
+        {
+            _slide = new Slide(20);
+            MoveRightCommand = new RelayCommand(_slide.Controller.MoveRight);
+            MoveLeftCommand = new RelayCommand(_slide.Controller.MoveLeft);
+        }
+                
     }
 }

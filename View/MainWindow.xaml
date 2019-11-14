@@ -22,11 +22,15 @@
                 <MenuItem Header="Открыть"/>
                 <MenuItem Header="Сохранить"/>
             </MenuItem>
-            <MenuItem Header="Выполнить">
-                <MenuItem Header="Выполнить"/>
+            <MenuItem Header="Каретка" Padding="6">
+                <MenuItem Header="Создать"/>
+                <MenuItem Header="Удалить"/>
+            </MenuItem>
+            <MenuItem Header="Выполнить" Padding="6">
+                <MenuItem Header="Выполнить" />
                 <MenuItem Header="Выполнить по шагам"/>
             </MenuItem>
-            <MenuItem Header="Скорость">
+            <MenuItem Header="Скорость" Padding="6">
                 <MenuItem Header="Быстрее 2х"/>
                 <MenuItem Header="Медленее 2х"/>
             </MenuItem>
@@ -38,11 +42,12 @@
                    HorizontalContentAlignment="center" Content="Символы алфавита: "/>
             <TextBox VerticalContentAlignment="center"/>
         </DockPanel>
-
+        <Label Content="Создайте каретку" Grid.Row="2"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <DataGrid Name="SlideGrid"  
                   AutoGenerateColumns="False"
-                  ItemsSource="{Binding Cells, Mode=TwoWay}"
-                  Grid.Row="2"                      
+                  ItemsSource="{Binding Cells}"
+                  Grid.Row="2" 
+                  Visibility="{Binding SlideVisibility}"
                   Style="{DynamicResource SlideGrid}">
             <DataGrid.LayoutTransform>
                 <TransformGroup>
