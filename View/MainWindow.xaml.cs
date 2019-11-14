@@ -22,23 +22,27 @@ namespace TuringMachine
     public partial class MainWindow : Window
     {
         public MainWindow()
-        {            
+        {          
             DataContext = new MainWindowViewModel();
             InitializeComponent();
-            if (List.HasItems)
-                List.RowHeight = this.ActualWidth / List.Items.Count;
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (List.HasItems)
-                List.RowHeight = this.ActualWidth / List.Items.Count;
+            
+            ResizeSlideGrid();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (List.HasItems)
-                List.RowHeight = this.ActualWidth / List.Items.Count;
+            ResizeSlideGrid();
+        }
+
+        private void ResizeSlideGrid()
+        {
+            if (SlideGrid.HasItems)                
+                SlideGrid.RowHeight = this.ActualWidth / (SlideGrid.Items.Count);
+
         }
     }
 }

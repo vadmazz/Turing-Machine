@@ -4,8 +4,22 @@
              xmlns:local="clr-namespace:TuringMachine"
              StartupUri="View/MainWindow.xaml">
     <Application.Resources>
-        <Style x:Key="MenuButton" TargetType="Button">
-            <Setter Property="Padding" Value="5"/>
+        <Style x:Key="SlideGrid" TargetType="DataGrid">
+            <Setter Property="HeadersVisibility" Value="None"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Hidden"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="ColumnWidth" Value="*"/>
+            <Setter Property="Height" Value="auto"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="False"/>
+            <Setter Property="RowStyle">
+                <Setter.Value>
+                    <Style>
+                        <Setter Property="TextBlock.TextAlignment" Value="center"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Application.Resources>
 </Application>

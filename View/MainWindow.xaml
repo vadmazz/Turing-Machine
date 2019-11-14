@@ -22,10 +22,15 @@
                 <MenuItem Header="Открыть"/>
                 <MenuItem Header="Сохранить"/>
             </MenuItem>
+            <MenuItem Header="Выполнить">
+                <MenuItem Header="Выполнить"/>
+                <MenuItem Header="Выполнить по шагам"/>
+            </MenuItem>
+            <MenuItem Header="Скорость">
+                <MenuItem Header="Быстрее 2х"/>
+                <MenuItem Header="Медленее 2х"/>
+            </MenuItem>
             <MenuItem Header="Справка" />
-            <Separator></Separator>
-            <MenuItem Header="Запустить" />
-            <MenuItem Header="Завершить" />
         </Menu>
         <TextBox Grid.Row="1">Условие задачи:</TextBox>
         <DockPanel x:Name="AlphabetPanel" Grid.Row="4">
@@ -33,44 +38,47 @@
                    HorizontalContentAlignment="center" Content="Символы алфавита: "/>
             <TextBox VerticalContentAlignment="center"/>
         </DockPanel>
-        <DataGrid Name="List"                   
-                  ItemsSource="{Binding Numbers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+        
+            <DataGrid Name="SlideGrid"                            
+                  ItemsSource="{Binding Numbers, Mode=TwoWay}" 
                   Grid.Row="2" 
-                  HeadersVisibility="None"
-                  VerticalScrollBarVisibility="Hidden"
-                  HorizontalScrollBarVisibility="Hidden">
-            <DataGrid.LayoutTransform>
-                <TransformGroup>
-                    <RotateTransform Angle="90"/>
-                    <MatrixTransform Matrix="-1,0,0,1,0,0"/>
-                </TransformGroup>
-            </DataGrid.LayoutTransform>
-            <DataGrid.ColumnHeaderStyle>
-                <Style TargetType="{x:Type DataGridColumnHeader}"
+                  Style="{DynamicResource SlideGrid}">
+                <DataGrid.LayoutTransform>
+                    <TransformGroup>
+                        <RotateTransform Angle="90"/>
+                        <MatrixTransform Matrix="-1,0,0,1,0,0"/>
+                    </TransformGroup>
+                </DataGrid.LayoutTransform>
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="{x:Type DataGridColumnHeader}"
                 BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
-                    <Setter Property="LayoutTransform">
-                        <Setter.Value>
-                            <TransformGroup>
-                                <RotateTransform Angle="-90"/>
-                                <ScaleTransform ScaleX="1" ScaleY="-1" />
-                            </TransformGroup>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </DataGrid.ColumnHeaderStyle>
-            <DataGrid.CellStyle>
-                <Style  TargetType="DataGridCell">
-                    <Setter Property="LayoutTransform">
-                        <Setter.Value>
-                            <TransformGroup>
-                                <RotateTransform Angle="-90"/>
-                                <ScaleTransform ScaleX="1" ScaleY="-1" />
-                            </TransformGroup>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </DataGrid.CellStyle>
-        </DataGrid>
+                        <Setter Property="LayoutTransform">
+                            <Setter.Value>
+                                <TransformGroup>
+                                    <RotateTransform Angle="-90"/>
+                                    <ScaleTransform ScaleX="1" ScaleY="-1" />
+                                </TransformGroup>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+                <DataGrid.CellStyle>
+                    <Style  TargetType="DataGridCell">
+                        <Setter Property="LayoutTransform">
+                            <Setter.Value>
+                                <TransformGroup>
+                                    <RotateTransform Angle="-90"/>
+                                    <ScaleTransform ScaleX="1" ScaleY="-1" />
+                                </TransformGroup>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Width" Value="auto"/>
+                    </Style>
+                </DataGrid.CellStyle>
+
+            </DataGrid>
+        
+        
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

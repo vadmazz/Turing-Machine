@@ -4,12 +4,14 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Windows.Controls;
+using TuringMachine.Model;
 
 namespace TuringMachine.ViewModel
 {
     class MainWindowViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<int> Numbers { get; set; } = new ObservableCollection<int> { 0,1,2,3,4,5,6};
+        public ObservableCollection<SlideCell> Numbers { get; set; } = new ObservableCollection<SlideCell>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
@@ -19,8 +21,11 @@ namespace TuringMachine.ViewModel
         }
 
         public MainWindowViewModel()
-        { 
-            ///TODO: Пофиксить баг, не изменяется Datagrid
+        {
+            for (int i = -10; i <= 10; i++)
+            {
+                Numbers.Add(new SlideCell { Number = i });
+            }            
         }
     }
 }
