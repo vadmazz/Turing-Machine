@@ -24,7 +24,6 @@ namespace TuringMachine
         public MainWindow()
         {          
             DataContext = new MainWindowViewModel();
-            InitializeComponent();
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)

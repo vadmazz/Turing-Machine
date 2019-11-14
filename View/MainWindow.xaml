@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TuringMachine"
         xmlns:VM="clr-namespace:TuringMachine.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" MinHeight="620" MinWidth="1000" Height="620" Width="1000" SizeChanged="Window_SizeChanged" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
+        Title="MainWindow" MinHeight="620" MinWidth="1000" Height="620" Width="1000" SizeChanged="Window_SizeChanged" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" Icon="C:\Users\vadim\source\repos\TuringMachine\TuringMachine\Media\Logo.png">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -38,47 +38,64 @@
                    HorizontalContentAlignment="center" Content="Символы алфавита: "/>
             <TextBox VerticalContentAlignment="center"/>
         </DockPanel>
-        
-            <DataGrid Name="SlideGrid"                            
-                  ItemsSource="{Binding Numbers, Mode=TwoWay}" 
-                  Grid.Row="2" 
-                  Style="{DynamicResource SlideGrid}">
-                <DataGrid.LayoutTransform>
-                    <TransformGroup>
-                        <RotateTransform Angle="90"/>
-                        <MatrixTransform Matrix="-1,0,0,1,0,0"/>
-                    </TransformGroup>
-                </DataGrid.LayoutTransform>
-                <DataGrid.ColumnHeaderStyle>
-                    <Style TargetType="{x:Type DataGridColumnHeader}"
-                BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
-                        <Setter Property="LayoutTransform">
-                            <Setter.Value>
-                                <TransformGroup>
-                                    <RotateTransform Angle="-90"/>
-                                    <ScaleTransform ScaleX="1" ScaleY="-1" />
-                                </TransformGroup>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </DataGrid.ColumnHeaderStyle>
-                <DataGrid.CellStyle>
-                    <Style  TargetType="DataGridCell">
-                        <Setter Property="LayoutTransform">
-                            <Setter.Value>
-                                <TransformGroup>
-                                    <RotateTransform Angle="-90"/>
-                                    <ScaleTransform ScaleX="1" ScaleY="-1" />
-                                </TransformGroup>
-                            </Setter.Value>
-                        </Setter>
-                        <Setter Property="Width" Value="auto"/>
-                    </Style>
-                </DataGrid.CellStyle>
 
-            </DataGrid>
-        
-        
+        <DataGrid Name="SlideGrid"  
+                  AutoGenerateColumns="False"
+                  ItemsSource="{Binding Cells, Mode=TwoWay}"
+                  Grid.Row="2"                      
+                  Style="{DynamicResource SlideGrid}">
+            <DataGrid.LayoutTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="90"/>
+                    <MatrixTransform Matrix="-1,0,0,1,0,0"/>
+                </TransformGroup>
+            </DataGrid.LayoutTransform>
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="{x:Type DataGridColumnHeader}"
+                BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                    <Setter Property="LayoutTransform">
+                        <Setter.Value>
+                            <TransformGroup>
+                                <RotateTransform Angle="-90"/>
+                                <ScaleTransform ScaleX="1" ScaleY="-1" />
+                            </TransformGroup>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.CellStyle>
+                <Style  TargetType="DataGridCell">
+                    <Setter Property="LayoutTransform">
+                        <Setter.Value>
+                            <TransformGroup>
+                                <RotateTransform Angle="-90"/>
+                                <ScaleTransform ScaleX="1" ScaleY="-1" />
+                            </TransformGroup>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Width" Value="auto"/>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Number}" />
+                <DataGridTextColumn Binding="{Binding Value}"/>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image x:Name="img" Visibility="Hidden" Source="C:\Users\vadim\source\repos\TuringMachine\TuringMachine\Media\pointer_up.png"/>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsActive, Mode=TwoWay}" Value="True">
+                                    <Setter TargetName="img" Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsActive, Mode=TwoWay}" Value="False">
+                                    <Setter TargetName="img" Property="Visibility" Value="Hidden"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -90,10 +107,10 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Margin="3,3" Grid.Column="1" Content="+"/>
-            <Button Margin="3,3" Content="&lt;" Grid.Column="3"/>
-            <Button Margin="3,3" Content="&gt;" Grid.Column="4"/>
-            <Button Margin="3,3" Grid.Column="6" Content="+"/>
+            <RepeatButton Margin="3,3" Grid.Column="1" Content="+"/>
+            <RepeatButton Margin="3,3" Command="{ Binding MoveLeftCommand }" Content="&lt;" Grid.Column="3"/>
+            <RepeatButton Margin="3,3" Command="{ Binding MoveRightCommand }" Content="&gt;" Grid.Column="4"/>
+            <RepeatButton Margin="3,3" Grid.Column="6" Content="+"/>
         </Grid>
         
     </Grid>
