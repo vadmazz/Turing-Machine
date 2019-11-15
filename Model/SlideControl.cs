@@ -9,7 +9,7 @@ namespace TuringMachine.Model
         public SlideControl(IEnumerable<SlideCell> cells)
         {
             _cells = cells;
-            var index = _cells.ToList()//находим нулевой элемент
+            var index = _cells.ToList()//устанавливаем каретку в нулевой элемент
                 .Where(x => x.Number == 0)
                 .FirstOrDefault();
             SetActiveCell(_cells.ToList().IndexOf(index));

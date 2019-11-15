@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TuringMachine.View"
         mc:Ignorable="d"
-        Title="SlideCreateWindow" Height="110" Width="520" MinHeight="110" MinWidth="520" ResizeMode="NoResize">
+        Title="Изменение каретки" Height="110" Width="520" MinHeight="110" MinWidth="520" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -22,10 +22,11 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Content="Создать" Grid.Column="1"/>
+            <Button Content="Сохранить" Grid.Column="1" Command="{Binding SubmitCommand}" CommandParameter="{Binding RelativeSource={RelativeSource 
+                AncestorType={x:Type Window}}}" />
         </Grid>
-        <Label Content="Количетсво элементов: " VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        <TextBox Grid.Column="1" Margin="50,5"/>
-        <CheckBox Content="В обе стороны" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <Label Content="Количество элементов: " VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBox Grid.Column="1" Margin="50,2" Text="{Binding CellsCountTemp, Mode=TwoWay}"/>
+        <CheckBox Content="В обе стороны" IsChecked="{Binding HaveMinusValues, Mode=TwoWay}" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
     </Grid>
 </Window>

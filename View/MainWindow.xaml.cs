@@ -1,17 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using TuringMachine.ViewModel;
 
 namespace TuringMachine
@@ -27,8 +15,7 @@ namespace TuringMachine
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            
+        {            
             ResizeSlideGrid();
         }
 
@@ -41,7 +28,18 @@ namespace TuringMachine
         {
             if (SlideGrid.HasItems)                
                 SlideGrid.RowHeight = this.ActualWidth / (SlideGrid.Items.Count);
+        }
 
+        private void Window_Activated(object sender, EventArgs e)
+        {            
+            var VM = (MainWindowViewModel)this.DataContext;
+            if (VM != null)
+            {
+                VM.ChangeSlideCommand.Execute(null);            
+                ResizeSlideGrid();
+                MoveRightButton.Command = VM.MoveRightCommand;
+                MoveLeftButton.Command = VM.MoveLeftCommand;
+            }
         }
     }
 }
