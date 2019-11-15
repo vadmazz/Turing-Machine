@@ -39,7 +39,14 @@ namespace TuringMachine
                 ResizeSlideGrid();
                 MoveRightButton.Command = VM.MoveRightCommand;
                 MoveLeftButton.Command = VM.MoveLeftCommand;
+                AddRightButton.Command = VM.AddRightCommand;
+                AddLeftButton.Command = VM.AddLeftCommand;
             }
+        }
+
+        private void RepeatButton_Click(object sender, RoutedEventArgs e)
+        {            
+            ResizeSlideGrid();            
         }
     }
 }

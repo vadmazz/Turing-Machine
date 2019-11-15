@@ -22,7 +22,7 @@ namespace TuringMachine.Model
             {
                 _cells.Add(new SlideCell { Number = i });
             }
-            Controller = new SlideControl(_cells);
+            Controller = new SlideControl(Cells);
         }
 
         public Slide(int cellsCount)
@@ -32,7 +32,7 @@ namespace TuringMachine.Model
             {
                 _cells.Add(new SlideCell { Number = i });
             }
-            Controller = new SlideControl(_cells);
+            Controller = new SlideControl(Cells);
         }
 
         public Slide()
@@ -42,7 +42,7 @@ namespace TuringMachine.Model
             {
                 _cells.Add(new SlideCell { Number = i });
             }
-            Controller = new SlideControl(_cells);
+            Controller = new SlideControl(Cells);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

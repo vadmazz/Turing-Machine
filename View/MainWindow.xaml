@@ -107,10 +107,10 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <RepeatButton Margin="3,3" Grid.Column="1" Content="+"/>
+            <RepeatButton Name="AddLeftButton" Command="{ Binding AddLeftCommand }" Margin="3,3" Grid.Column="1" Content="+"/>
             <RepeatButton Name="MoveLeftButton" Margin="3,3" Command="{ Binding MoveLeftCommand}" Content="&lt;" Grid.Column="3"/>
             <RepeatButton Name="MoveRightButton" Margin="3,3" Command="{ Binding MoveRightCommand }" Content="&gt;" Grid.Column="4"/>
-            <RepeatButton Margin="3,3" Grid.Column="6" Content="+"/>
+            <RepeatButton Name="AddRightButton" Command="{ Binding AddRightCommand }"  Margin="3,3" Grid.Column="6" Content="+" Click="RepeatButton_Click"/>
         </Grid>
         
     </Grid>

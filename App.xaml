@@ -21,9 +21,7 @@
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
-                <Trigger Property="DataGridCell.IsSelected" Value="True">
-                    <Setter Property="Background" Value="#CCDAFF" />
-                </Trigger>
+                
             </Style.Triggers>
         </Style>
     </Application.Resources>

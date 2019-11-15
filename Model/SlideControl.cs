@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace TuringMachine.Model
 {
     public class SlideControl
     {
-        private IEnumerable<SlideCell> _cells;
-        public SlideControl(IEnumerable<SlideCell> cells)
+        private ObservableCollection<SlideCell> _cells;
+        public SlideControl(ObservableCollection<SlideCell> cells)
         {
             _cells = cells;
             var index = _cells.ToList()//устанавливаем каретку в нулевой элемент
@@ -57,6 +58,38 @@ namespace TuringMachine.Model
                 var activeIndex = _cells.ToList().IndexOf(current);
                 if (activeIndex > 0)
                     SetActiveCell(activeIndex - 1);
+            }
+        }
+
+        public void AddRight(object parameter)
+        {
+            var maxCellIndex = _cells
+                .Select(x => x.Number)
+                .Max();
+            _cells.Add(new SlideCell { Number = maxCellIndex + 1});
+        }
+
+        public void AddLeft(object parameter)
+        {
+            var minCellIndex = _cells
+                .Select(x => x.Number)
+                .Min();
+            var cell = new SlideCell { Number = minCellIndex - 1 };
+            var count = _cells.Count;
+            for (int i = count; i >= 0; i--)
+            {
+                if (i == count)
+                {
+                    var t = _cells[i - 1];
+                    _cells.Add(t);
+                }
+                if (i == 0)
+                {
+                    _cells[i] = cell;
+                    break;
+                }
+                _cells[i] = _cells[i - 1];
+                
             }
         }
 

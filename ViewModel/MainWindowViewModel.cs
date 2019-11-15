@@ -24,6 +24,8 @@ namespace TuringMachine.ViewModel
         public ICommand MoveLeftCommand { get; set; }        
         public ICommand OpenSlideCreateWindowCommand { get; private set; }        
         public ICommand ChangeSlideCommand { get; private set; }        
+        public ICommand AddRightCommand { get; private set; }        
+        public ICommand AddLeftCommand { get; private set; }        
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -39,6 +41,8 @@ namespace TuringMachine.ViewModel
             Cells = _slide.Cells;
             MoveRightCommand = new RelayCommand(_slide.Controller.MoveRight);
             MoveLeftCommand = new RelayCommand(_slide.Controller.MoveLeft);
+            AddRightCommand = new RelayCommand(_slide.Controller.AddRight);
+            AddLeftCommand = new RelayCommand(_slide.Controller.AddLeft);
             ChangeSlideCommand = new RelayCommand(ChangeSlide);
             OpenSlideCreateWindowCommand = new RelayCommand(OpenSlideCreateWindow);
         }
@@ -61,6 +65,8 @@ namespace TuringMachine.ViewModel
                 Cells = _slide.Cells;
                 MoveRightCommand = new RelayCommand(_slide.Controller.MoveRight);
                 MoveLeftCommand = new RelayCommand(_slide.Controller.MoveLeft);
+                AddRightCommand = new RelayCommand(_slide.Controller.AddRight);
+                AddLeftCommand = new RelayCommand(_slide.Controller.AddLeft);
             }            
         }
     }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TuringMachine.View"
         mc:Ignorable="d"
-        Title="Изменение каретки" Height="110" Width="520" MinHeight="110" MinWidth="520" ResizeMode="NoResize">
+        Title="Изменение каретки" Height="110" Width="520" MinHeight="110" MinWidth="520" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
