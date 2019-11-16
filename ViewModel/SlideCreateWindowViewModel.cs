@@ -9,7 +9,7 @@ using System.Windows.Input;
 namespace TuringMachine.ViewModel
 {
     class SlideCreateWindowViewModel : INotifyPropertyChanged
-    {//TODO: сделать окно создания каретки, + + по сторонам
+    {
         public event PropertyChangedEventHandler PropertyChanged;
         public string CellsCount { get; set; }
         public string CellsCountTemp { get; set; }

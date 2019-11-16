@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using TuringMachine.Model;
 using TuringMachine.ViewModel;
 
 namespace TuringMachine
@@ -47,6 +52,17 @@ namespace TuringMachine
         private void RepeatButton_Click(object sender, RoutedEventArgs e)
         {            
             ResizeSlideGrid();            
+        }
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var VM = (MainWindowViewModel)this.DataContext;
+            VM.Symbols = AlpText.Text;
+            VM.AddAlphabetSymbolCommand.Execute(VM.Symbols); 
+        }
+
+        private void AddLeftButton_Click(object sender, RoutedEventArgs e)
+        {
+            ResizeSlideGrid();
         }
     }
 }

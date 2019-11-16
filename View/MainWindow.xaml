@@ -3,15 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TuringMachine"
+        xmlns:local="clr-namespace:TuringMachine.View"
         xmlns:VM="clr-namespace:TuringMachine.ViewModel"
         mc:Ignorable="d"
-        Title="Эмулятор машины тьюринга" MinHeight="620" MinWidth="1000" Height="620" Width="1000" SizeChanged="Window_SizeChanged" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" Icon="C:\Users\vadim\source\repos\TuringMachine\TuringMachine\Media\Logo.png" Activated="Window_Activated">
+        Title="Эмулятор машины Тьюринга" MinHeight="620" MinWidth="1000" Height="620" Width="1000" SizeChanged="Window_SizeChanged" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" Icon="C:\Users\vadim\source\repos\TuringMachine\TuringMachine\Media\Logo.png" Activated="Window_Activated">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -33,12 +35,16 @@
             </MenuItem>
             <MenuItem Header="Справка" />
         </Menu>
-        <TextBox Grid.Row="1">Условие задачи:</TextBox>
-        <DockPanel x:Name="AlphabetPanel" Grid.Row="4">
+        <TextBox Grid.Row="1">Условие задачи: </TextBox>
+        <DockPanel x:Name="AlphabetPanel" Grid.Row="5">
             <Label VerticalContentAlignment="Center"
                    HorizontalContentAlignment="center" Content="Символы алфавита: "/>
-            <TextBox VerticalContentAlignment="center"/>
+            <TextBox Name="AlpText" VerticalContentAlignment="center" Text="{Binding Symbols, Mode=TwoWay}" TextChanged="TextBox_TextChanged"/>
         </DockPanel>
+        <StackPanel  Orientation="Horizontal"  Grid.Row="7">
+            <RepeatButton Content="+" Padding="10,0" Command="{Binding AddStateCommand}" Margin="5,5"/>
+            <RepeatButton Content="-" Padding="10, 0" Command="{Binding RemoveStateCommand}" Margin="5,5"/>
+        </StackPanel>
         <DataGrid Name="SlideGrid"  
                   AutoGenerateColumns="False"
                   ItemsSource="{Binding Cells}"
@@ -96,7 +102,7 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="3" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="2*"/>
@@ -107,11 +113,16 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <RepeatButton Name="AddLeftButton" Command="{ Binding AddLeftCommand }" Margin="3,3" Grid.Column="1" Content="+"/>
+            <RepeatButton Name="AddLeftButton" Command="{ Binding AddLeftCommand }" Margin="3,3,3,0" Grid.Column="1" Content="+" Height="30" VerticalAlignment="Top" Click="AddLeftButton_Click"/>
             <RepeatButton Name="MoveLeftButton" Margin="3,3" Command="{ Binding MoveLeftCommand}" Content="&lt;" Grid.Column="3"/>
             <RepeatButton Name="MoveRightButton" Margin="3,3" Command="{ Binding MoveRightCommand }" Content="&gt;" Grid.Column="4"/>
             <RepeatButton Name="AddRightButton" Command="{ Binding AddRightCommand }"  Margin="3,3" Grid.Column="6" Content="+" Click="RepeatButton_Click"/>
         </Grid>
-        
+        <local:ActionsDataGrid x:Name="ActionsTable" AutoGenerateColumns="False" Grid.Row="8"
+                      ColumnHeaders="{Binding ColumnHeaders}"
+                      ItemsSource="{Binding AlphabetSymbols}"
+                      CanUserAddRows="False" IsReadOnly="False">
+
+        </local:ActionsDataGrid>
     </Grid>
 </Window>
