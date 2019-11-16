@@ -26,7 +26,7 @@ namespace TuringMachine.View
             var dataGrid = d as ActionsDataGrid;
             dataGrid.Columns.Clear();
             //Add Person Column
-            dataGrid.Columns.Add(new DataGridTextColumn() { Header = "Name", Binding = new Binding("Name") });
+            dataGrid.Columns.Add(new DataGridTextColumn() { Header = "  Состояние\nАлфавит", Binding = new Binding("Name") });
             //Add Manufactures Columns
             foreach (var value in dataGrid.ColumnHeaders)
             {//TODO: ВМЕСТО STATES СОЗДАЬТ СВОЙСТВО В aLPHABETCELL ССЫЛКА НА aCTIONS ИЗ STATES

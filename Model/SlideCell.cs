@@ -9,7 +9,7 @@ namespace TuringMachine.Model
     public class SlideCell : INotifyPropertyChanged
     {
         public int Number { get; set; }
-        public string Value { get; set; }
+        public char Value { get; set; }
         private bool _isActive = false;
         public bool IsActive
         { 

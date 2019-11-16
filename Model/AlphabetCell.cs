@@ -7,6 +7,7 @@ namespace TuringMachine.Model
     class AlphabetCell
     {
         public ObservableCollection<State> States { get; set; }       
-        public string Name { get; set; }       
+        public string Name { get; set; }  
+        public bool IsExecute { get; set; }
     }
 }
