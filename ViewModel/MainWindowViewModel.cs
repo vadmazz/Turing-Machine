@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using TuringMachine.Model;
@@ -49,6 +48,8 @@ namespace TuringMachine.ViewModel
         public ICommand RunStepCommand { get; private set; }        
         public ICommand RunCommand { get; private set; }        
         public ICommand AddActionCommand { get; private set; }        
+        public ICommand FasterCommand { get; private set; }        
+        public ICommand SlowerCommand { get; private set; }        
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
@@ -66,6 +67,7 @@ namespace TuringMachine.ViewModel
             {
                 ColumnHeaders.Add(item);
             }
+            Speed = $"Скорость ({_commandProcessor.Speed})";
             _slide = new Slide(20);
             Cells = _slide.Cells;
             MoveRightCommand = new RelayCommand(_slide.Controller.MoveRight);
@@ -80,6 +82,9 @@ namespace TuringMachine.ViewModel
             RunStepCommand = new RelayCommand(RunStep);
             RunCommand = new RelayCommand(Run);
             AddActionCommand = new RelayCommand(AddAction);
+            FasterCommand = new RelayCommand(Faster);
+            SlowerCommand = new RelayCommand(Slower);
+
             _commandProcessor.RegisterSlide(_slide, _alphabetSymbols);
         }
 
@@ -88,29 +93,44 @@ namespace TuringMachine.ViewModel
             var msg = parameter as ActionTableMessage;
             _alphabetSymbols[msg.Row].States.FirstOrDefault(x => x.Name == msg.ColumnHeader).Action = msg.Value;            
         }
-        public int Speed { get; set; } = 2;//2 секунды 
-        private void Run(object parameter)
+        
+        public string Speed { get; set; }
+        private async void Run(object parameter)
         {
             while (_commandProcessor.IsEnd != true)
             {
+                await Task.Delay(1000 / _commandProcessor.Speed);
                 _commandProcessor.RunStep();
-                Thread.Sleep(Speed * 100);
+                
             }
             MessageBox.Show("Машина закончила свою работу");
             _commandProcessor.IsEnd = false;
         }
+        //TODO: Рефакторинг, добавление символов и ссостояний фикс
+        public void Faster(object parameter)
+        {
+            _commandProcessor.Speed *= 2;
+            Speed = $"Скорость ({_commandProcessor.Speed})";
+            OnPropertyChanged("Speed");
+        }
+        public void Slower(object parameter)
+        {
+            if (_commandProcessor.Speed >= 1)
+            {
+                _commandProcessor.Speed /= 2;
+                Speed = $"Скорость ({_commandProcessor.Speed})";
+                OnPropertyChanged("Speed");
+            }            
+        }
 
         private void RunStep(object parameter)
         {
+            _commandProcessor.RunStep();
             if (_commandProcessor.IsEnd)
             {
                 _commandProcessor.IsEnd = false;
                 MessageBox.Show("Машина закончила свою работу");
-            }
-            else
-            {
-                _commandProcessor.RunStep();            
-            }
+            }            
         }
 
         public void OpenSlideCreateWindow(object parameter)

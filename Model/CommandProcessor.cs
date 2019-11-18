@@ -19,6 +19,7 @@ namespace TuringMachine.Model
             get { return _states; }
             set { _states = value; OnPropertyChanged("States"); }
         }
+        public int Speed { get; set; } = 1;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
@@ -138,7 +139,7 @@ namespace TuringMachine.Model
                     throw new CannotExecuteException("Ожидалось действие!", 
                         $"Элемент алфавита: {_executableAlphabetCell.Name}\nСостояние: {_executableAlphabetCell.CurrentState.Name}");
                 var actionText = _executableAlphabetCell.CurrentState.Action;
-                if (actionText == ".>.")
+                if (actionText == "end")
                 {
                     _executableAlphabetCell = null;
                     IsEnd = true;
