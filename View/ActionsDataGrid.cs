@@ -17,8 +17,7 @@ namespace TuringMachine.View
         {
             get { return GetValue(ColumnHeadersProperty) as ObservableCollection<string>; }
             set { SetValue(ColumnHeadersProperty, value); }
-        }
-
+        }        
         public static readonly DependencyProperty ColumnHeadersProperty = System.Windows.DependencyProperty.Register("ColumnHeaders", typeof(ObservableCollection<string>), typeof(ActionsDataGrid), new PropertyMetadata(new PropertyChangedCallback(OnColumnsChanged)));
 
     static void OnColumnsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -30,7 +29,7 @@ namespace TuringMachine.View
             //Add Manufactures Columns
             foreach (var value in dataGrid.ColumnHeaders)
             {//TODO: ВМЕСТО STATES СОЗДАЬТ СВОЙСТВО В aLPHABETCELL ССЫЛКА НА aCTIONS ИЗ STATES
-                var column = new DataGridTextColumn() { Header = value, Binding = new Binding("States") { ConverterParameter = value, Converter = new StateConverter(), Mode=BindingMode.TwoWay } };
+                var column = new DataGridTextColumn() { Header = value, Binding = new Binding("States") { ConverterParameter = value, Converter = new StateConverter()} };
                 dataGrid.Columns.Add(column);
             }
         }
@@ -38,8 +37,8 @@ namespace TuringMachine.View
 
     public class StateConverter : IValueConverter
     {
-        private IEnumerable<State> _states;
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        private IEnumerable<State> _states;        
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)//стринг в state
         {
             var states = value as IEnumerable<State>;
             _states = states;
@@ -53,10 +52,10 @@ namespace TuringMachine.View
             return false;            
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)//state в стринг
         {
             //throw new NotImplementedException();//TODO: здесь написать метод при клике на ячейку
-            //var states = value as IEnumerable<State>;
+            var value2 = value as string;            
             if (value != null && parameter != null)
             {
                 var state = _states

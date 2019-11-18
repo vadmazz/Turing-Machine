@@ -1,5 +1,4 @@
-﻿
-namespace TuringMachine.Model
+﻿namespace TuringMachine.Model
 {
     class State
     {

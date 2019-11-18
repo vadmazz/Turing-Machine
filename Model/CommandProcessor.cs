@@ -5,65 +5,87 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using TuringMachine.Model.Commands;
 
 namespace TuringMachine.Model
 {
-    class CommandProcessor
+    class CommandProcessor : INotifyPropertyChanged
     {
         //public Alphabet Alphabet { get; set; }
         public ObservableCollection<AlphabetCell> AlphabetSymbols{ get; set; }
         private ObservableCollection<State> _states;
-        private ObservableCollection<SlideCell> _cells;
+        public ObservableCollection<State> States
+        {
+            get { return _states; }
+            set { _states = value; OnPropertyChanged("States"); }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
         public CommandProcessor()
         {
             _states = new ObservableCollection<State>();
             AlphabetSymbols = new ObservableCollection<AlphabetCell>();
-            _states = new ObservableCollection<State> { new State
-                    {
-                        Name="Q1",                        
-                    },
-                    new State
-                    {
-                        Name="Q2",                        
-                    },                    
-                };
-
-            AlphabetSymbols.Add(new AlphabetCell 
-            {
-                Name = " ",
-                States = _states
-            });
+            AddState();
+            AddState();                        
+            AddAlphabetSymbol(" ");
         }
 
         public void AddAlphabetSymbol(string wrap)
         {
-            AlphabetSymbols.Clear();            
+            ObservableCollection<State> newStates = new ObservableCollection<State>();
+            foreach (var item2 in _states)
+            {
+                newStates.Add(new State
+                {                    
+                    Name = item2.Name
+                });
+            }
+            AlphabetSymbols.Clear();
             AlphabetSymbols.Add(new AlphabetCell
             {
                 Name = " ",
-                States = _states
+                States = newStates
             });
             var temp = wrap.ToArray<char>().Distinct();            
             foreach (var item in temp)
-            {
-                if (!AlphabetSymbols.Select(x => x.Name).Contains(item.ToString()) && item != " ".ToCharArray()[0])                    
-                    AlphabetSymbols.Add(new AlphabetCell 
+            {                
+                if (!AlphabetSymbols.Select(x => x.Name).Contains(item.ToString()) && item != " ".ToCharArray()[0])
+                {
+                    var newCell = new AlphabetCell
                     {
-                        Name=item.ToString(),
-                        States=_states
-                    });
+                        Name = item.ToString()
+                    };
+                    var statesss = new ObservableCollection<State>();
+                    foreach (var state in _states)
+                    {
+                        statesss.Add(new State
+                        {
+                            Name = state.Name
+                        });
+                    }
+                    newCell.States = statesss;
+                    AlphabetSymbols.Add(newCell);
+                }
             }            
         }
         public void AddState()
         {
-            var lastIndex = AlphabetSymbols[0].States.Count;
+            var lastIndex = States.Count;
             _states.Add(new State
             {
-                Name=$"Q{lastIndex + 1}",                
+                Name = $"Q{lastIndex + 1}",
             });            
-            foreach(var item in AlphabetSymbols)
+            foreach (var item in AlphabetSymbols)
             {
-                item.States = _states;                
+                item.States.Add(new State
+                {
+                    Name = $"Q{lastIndex + 2}",
+                });
             }
         }
         public void RemoveState()
@@ -80,75 +102,36 @@ namespace TuringMachine.Model
         }
 
         #region Команды обработчика
-        Slide _slide;
+        Slide _slider;
         AlphabetCell _executableAlphabetCell;
-        SlideCell _executableSlideCell;
-        enum Command
+        ObservableCollection<AlphabetCell> _alphabetCells;
+        
+        public void RegisterSlide(Slide slider, ObservableCollection<AlphabetCell> cells)
         {
-            ChangeValue,
-            Move,
-            ChangeState
-        }       
-        public void RegisterSlide(Slide slide, AlphabetCell executableCell)
-        {
-            _slide = slide;
-            _cells = _slide.Cells;
-            _executableAlphabetCell = executableCell;
+            _slider = slider;
+            _alphabetCells = cells;
+            var currentSlideCell = _slider.Cells.FirstOrDefault(x => x.IsActive);
+            _executableAlphabetCell = _alphabetCells.FirstOrDefault(x => x.Name == currentSlideCell.Value);
             _executableAlphabetCell.IsExecute = true;
+            _executableAlphabetCell.CurrentState = _executableAlphabetCell.States.FirstOrDefault(x => x.Name == "Q1");
         }
 
-        public void Execute(string actionText)
+        public void RunStep()
         {
-            if (actionText.ToCharArray().Length != 3)
-                throw new CannotExecuteException("Недопустимое количество действий", actionText);
-            var com1 = actionText[0].ToString();
-            var com2 = actionText[1].ToString();
-            var com3 = $"{actionText[2]}{actionText[3]}";
-            if (!IsCommandValid(com1, Command.ChangeValue))
-                throw new CannotExecuteException($"Невозможно выполнить команду", com1);
-            if (!IsCommandValid(com2, Command.Move))
-                throw new CannotExecuteException($"Невозможно выполнить команду", com2);
-            if (!IsCommandValid(com3, Command.ChangeState))
-                throw new CannotExecuteException($"Невозможно выполнить команду", com3);
-            if (_executableSlideCell.Value != _executableAlphabetCell.Name.ToCharArray()[0])
-                throw new CannotExecuteException($"Не совпадают значения на каретке и в действии", com3);
-            SlideControl slideController = _slide.Controller;
-            if (com1 != ".")
-                _executableAlphabetCell.Name = com1;
-            _executableAlphabetCell.IsExecute = false;//TODO: Дописать Execute()
+            var actionText = _executableAlphabetCell.CurrentState.Action;
+            //if (actionText.ToCharArray().Length != 3 || actionText.ToCharArray().Length != 4)
+            //    throw new CannotExecuteException("Недопустимое количество действий", actionText);            
+            SlideControl slideController = _slider.Controller;
+            
+            MoveCommand moveCommand = new MoveCommand();
+            ChangeCommand changeCommand = new ChangeCommand();
+            SetStateCommand setStateCommand = new SetStateCommand();
+            changeCommand.Execute(_executableAlphabetCell, _alphabetCells, _slider);
 
-        }        
-        /// <summary>
-        /// Проверка на валидность команды
-        /// </summary>
-        /// <param name="actionText">Текст команды</param>
-        /// <param name="commandIndex">Команда </param>
-        private bool IsCommandValid(string action, Command command)
-        {            
-            switch (command)
-            {
-                case Command.ChangeValue:
-                    foreach (var item in AlphabetSymbols.Select(x => x.Name))
-                    {
-                        if (item.Contains(action) || action == ".")                        
-                            return true;                        
-                    }
-                    return false;                    
-                case Command.Move:
-                    if (action == "<" || action == ">")
-                        return true;
-                    return false;
-                case Command.ChangeState:
-                    if (_states.Select(x => x.Name).Contains(action) || action == ".")
-                        return true;
-                    return false;                    
-            }
-            return false;
-        }
+            moveCommand.Execute(_executableAlphabetCell, _slider);
 
-        private void GoToState(State stateTo, AlphabetCell alphabetSymbol )
-        {
-
+            setStateCommand.Execute(_executableAlphabetCell, _alphabetCells, _slider);
+            
         }
         #endregion
     }

@@ -45,6 +45,8 @@ namespace TuringMachine.ViewModel
         public ICommand AddAlphabetSymbolCommand { get; private set; }        
         public ICommand AddStateCommand { get; private set; }        
         public ICommand RemoveStateCommand { get; private set; }        
+        public ICommand RunStepCommand { get; private set; }        
+        public ICommand AddActionCommand { get; private set; }        
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
@@ -58,7 +60,7 @@ namespace TuringMachine.ViewModel
             ColumnHeaders = new ObservableCollection<string>();
             _commandProcessor = new CommandProcessor();
             AlphabetSymbols = _commandProcessor.AlphabetSymbols;
-            foreach (var item in AlphabetSymbols.SelectMany(s => s.States).Select(s => s.Name).Distinct())
+            foreach (var item in _commandProcessor.States.Select(x => x.Name))
             {
                 ColumnHeaders.Add(item);
             }
@@ -73,8 +75,23 @@ namespace TuringMachine.ViewModel
             AddAlphabetSymbolCommand = new RelayCommand(AddAlphabetSymbol);
             AddStateCommand = new RelayCommand(AddState);
             RemoveStateCommand = new RelayCommand(RemoveState);
+            RunStepCommand = new RelayCommand(RunStep);
+            AddActionCommand = new RelayCommand(AddAction);
+            
         }
-        
+
+        private void AddAction(object parameter)
+        {
+            var msg = parameter as ActionTableMessage;
+            _alphabetSymbols[msg.Row].States.FirstOrDefault(x => x.Name == msg.ColumnHeader).Action = msg.Value;            
+        }
+
+        private void RunStep(object parameter)
+        {            
+            _commandProcessor.RegisterSlide(_slide, _alphabetSymbols);
+            _commandProcessor.RunStep();
+        }
+
         public void OpenSlideCreateWindow(object parameter)
         {
             var window = new SlideCreateWindow();
@@ -86,7 +103,7 @@ namespace TuringMachine.ViewModel
         {           
             _commandProcessor.AddState();
             var c = new ObservableCollection<string>();
-            foreach (var item in AlphabetSymbols[0].States.Select(x => x.Name))
+            foreach (var item in _commandProcessor.States.Select(x => x.Name))
             {
                 c.Add(item);
             }

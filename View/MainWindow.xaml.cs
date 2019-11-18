@@ -46,7 +46,7 @@ namespace TuringMachine
                 MoveLeftButton.Command = VM.MoveLeftCommand;
                 AddRightButton.Command = VM.AddRightCommand;
                 AddLeftButton.Command = VM.AddLeftCommand;
-            }
+            }            
         }
 
         private void RepeatButton_Click(object sender, RoutedEventArgs e)
@@ -64,5 +64,17 @@ namespace TuringMachine
         {
             ResizeSlideGrid();
         }
+
+        private void ActionsTable_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            var VM = (MainWindowViewModel)this.DataContext;
+            var rowIndex = e.Row.GetIndex();
+            var columnIndex = e.Column.Header;
+            var element = e.EditingElement as TextBox;
+            var editText = element.Text;
+            ActionTableMessage msg = new ActionTableMessage() { Row = rowIndex, ColumnHeader = columnIndex.ToString(), Value = editText };
+            VM.AddActionCommand.Execute(msg as object);
+        }
+        
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace TuringMachine.Model
 {
@@ -14,6 +16,7 @@ namespace TuringMachine.Model
                 .Where(x => x.Number == 0)
                 .FirstOrDefault();
             SetActiveCell(_cells.ToList().IndexOf(index));
+                 
         }
 
         /// <summary>
@@ -23,7 +26,7 @@ namespace TuringMachine.Model
         /// <param name="index">Индекс активного элемента</param>
         /// <returns></returns>
         public void SetActiveCell(int index)
-        {
+        {                        
             if (HasOneActive())
             {
                 var active = _cells
@@ -88,11 +91,23 @@ namespace TuringMachine.Model
                     _cells[i] = cell;
                     break;
                 }
-                _cells[i] = _cells[i - 1];
-                
+                _cells[i] = _cells[i - 1];                
             }
         }
 
+        public void UpdateCellValue(string value)
+        {
+            if (HasOneActive())
+            {
+                var current = _cells
+                    .Where(x => x.IsActive)
+                    .Select(x => x)
+                    .FirstOrDefault();
+                current.Value = value;
+                //костыль для обновления ObservableCOllection TODO: FIX IT
+                _cells[_cells.IndexOf(current)] = new SlideCell { Number = current.Number, Value = current.Value, IsActive=true };
+            }            
+        }
         private bool HasOneActive()
         {
             var query = _cells

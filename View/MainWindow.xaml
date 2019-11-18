@@ -26,7 +26,7 @@
             </MenuItem>
             <MenuItem Header="Выполнить" Padding="6">
                 <MenuItem Header="Выполнить" />
-                <MenuItem Header="Выполнить по шагам"/>
+                <MenuItem Header="Выполнить по шагам" Command="{Binding RunStepCommand}"/>
             </MenuItem>
             <MenuItem Header="Параметры каретки" Padding="6" Command="{Binding OpenSlideCreateWindowCommand}"/>
             <MenuItem Header="Скорость" Padding="6">
@@ -121,7 +121,7 @@
         <local:ActionsDataGrid x:Name="ActionsTable" AutoGenerateColumns="False" Grid.Row="8"
                       ColumnHeaders="{Binding ColumnHeaders}"
                       ItemsSource="{Binding AlphabetSymbols}"
-                      CanUserAddRows="False" IsReadOnly="False">
+                      CanUserAddRows="False" IsReadOnly="False" CellEditEnding="ActionsTable_CellEditEnding">
 
         </local:ActionsDataGrid>
     </Grid>
