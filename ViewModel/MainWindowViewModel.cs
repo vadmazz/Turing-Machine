@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using TuringMachine.Model;
@@ -46,6 +47,7 @@ namespace TuringMachine.ViewModel
         public ICommand AddStateCommand { get; private set; }        
         public ICommand RemoveStateCommand { get; private set; }        
         public ICommand RunStepCommand { get; private set; }        
+        public ICommand RunCommand { get; private set; }        
         public ICommand AddActionCommand { get; private set; }        
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -76,8 +78,9 @@ namespace TuringMachine.ViewModel
             AddStateCommand = new RelayCommand(AddState);
             RemoveStateCommand = new RelayCommand(RemoveState);
             RunStepCommand = new RelayCommand(RunStep);
+            RunCommand = new RelayCommand(Run);
             AddActionCommand = new RelayCommand(AddAction);
-            
+            _commandProcessor.RegisterSlide(_slide, _alphabetSymbols);
         }
 
         private void AddAction(object parameter)
@@ -85,11 +88,29 @@ namespace TuringMachine.ViewModel
             var msg = parameter as ActionTableMessage;
             _alphabetSymbols[msg.Row].States.FirstOrDefault(x => x.Name == msg.ColumnHeader).Action = msg.Value;            
         }
+        public int Speed { get; set; } = 2;//2 секунды 
+        private void Run(object parameter)
+        {
+            while (_commandProcessor.IsEnd != true)
+            {
+                _commandProcessor.RunStep();
+                Thread.Sleep(Speed * 100);
+            }
+            MessageBox.Show("Машина закончила свою работу");
+            _commandProcessor.IsEnd = false;
+        }
 
         private void RunStep(object parameter)
-        {            
-            _commandProcessor.RegisterSlide(_slide, _alphabetSymbols);
-            _commandProcessor.RunStep();
+        {
+            if (_commandProcessor.IsEnd)
+            {
+                _commandProcessor.IsEnd = false;
+                MessageBox.Show("Машина закончила свою работу");
+            }
+            else
+            {
+                _commandProcessor.RunStep();            
+            }
         }
 
         public void OpenSlideCreateWindow(object parameter)

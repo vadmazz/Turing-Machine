@@ -6,30 +6,32 @@ namespace TuringMachine.Model.Commands
 {
     class SetStateCommand
     {
-        
-        public void Execute(AlphabetCell executableCell, ObservableCollection<AlphabetCell> cells, Slide slider)
+        public bool IsEnd { get; set; }
+        public void Execute(ref AlphabetCell executableCell, ObservableCollection<AlphabetCell> cells, Slide slider)
         {
-            var action = $"{executableCell.CurrentState.Action[2]}{executableCell.CurrentState.Action[3]}";
-            //var states = executableCell.States;
             var currentSlideCell = slider.Cells.FirstOrDefault(x => x.IsActive);            
-            var nextExec = cells.FirstOrDefault(x => x.Name == currentSlideCell.Value);
+            if (currentSlideCell.Value == null)
+                throw new CannotExecuteException("На каретке нет требуемого символа!", executableCell.Name);
+            var action = $"{executableCell.CurrentState.Action[2]}{executableCell.CurrentState.Action[3]}";
+            if (action == null)
+                action = "Q1";
+            var nextExec = cells.FirstOrDefault(x => x.Name == currentSlideCell.Value);           
             var states = nextExec.States;
             if (IsValid(action, states))
-            {
-                //if (action == ".")
-
+            {                
                 var newcell = slider.Cells.FirstOrDefault(x => x.IsActive);
-                executableCell.IsExecute = false;                
+                executableCell.IsExecute = false;
                 executableCell = cells.FirstOrDefault(x => x.Name == newcell.Value);
                 executableCell.IsExecute = true;
                 executableCell.CurrentState = executableCell.States.FirstOrDefault(x => x.Name == action);
+              
             }
             else throw new CannotExecuteException("Указано несуществующее состояние!", action);
         }
 
         public bool IsValid(string action, ObservableCollection<State> states)
         {
-            if (states.Select(x => x.Name).Contains(action) || action == ".")
+            if (states.Select(x => x.Name).Contains(action))
                 return true;
             return false;
         }

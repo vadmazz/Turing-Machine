@@ -5,13 +5,13 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Windows;
 using TuringMachine.Model.Commands;
 
 namespace TuringMachine.Model
 {
     class CommandProcessor : INotifyPropertyChanged
-    {
-        //public Alphabet Alphabet { get; set; }
+    {        
         public ObservableCollection<AlphabetCell> AlphabetSymbols{ get; set; }
         private ObservableCollection<State> _states;
         public ObservableCollection<State> States
@@ -105,33 +105,60 @@ namespace TuringMachine.Model
         Slide _slider;
         AlphabetCell _executableAlphabetCell;
         ObservableCollection<AlphabetCell> _alphabetCells;
-        
+        MoveCommand _moveCommand;
+        ChangeCommand _changeCommand;
+        SetStateCommand _setStateCommand;
+        public bool IsEnd { get; set; }
+
         public void RegisterSlide(Slide slider, ObservableCollection<AlphabetCell> cells)
         {
             _slider = slider;
             _alphabetCells = cells;
-            var currentSlideCell = _slider.Cells.FirstOrDefault(x => x.IsActive);
-            _executableAlphabetCell = _alphabetCells.FirstOrDefault(x => x.Name == currentSlideCell.Value);
-            _executableAlphabetCell.IsExecute = true;
-            _executableAlphabetCell.CurrentState = _executableAlphabetCell.States.FirstOrDefault(x => x.Name == "Q1");
+            _moveCommand = new MoveCommand();
+            _changeCommand = new ChangeCommand();
+            _setStateCommand = new SetStateCommand();
         }
 
         public void RunStep()
         {
-            var actionText = _executableAlphabetCell.CurrentState.Action;
-            //if (actionText.ToCharArray().Length != 3 || actionText.ToCharArray().Length != 4)
-            //    throw new CannotExecuteException("Недопустимое количество действий", actionText);            
-            SlideControl slideController = _slider.Controller;
-            
-            MoveCommand moveCommand = new MoveCommand();
-            ChangeCommand changeCommand = new ChangeCommand();
-            SetStateCommand setStateCommand = new SetStateCommand();
-            changeCommand.Execute(_executableAlphabetCell, _alphabetCells, _slider);
+            try
+            {
+                var currentSlideName = _slider.Cells.FirstOrDefault(z => z.IsActive == true).Value;
+                if (_executableAlphabetCell == null)
+                {                    
+                    _executableAlphabetCell = _alphabetCells.FirstOrDefault(x =>
+                        x.Name == currentSlideName);
+                    _executableAlphabetCell.IsExecute = true;
+                    _executableAlphabetCell.CurrentState = _executableAlphabetCell.States.FirstOrDefault(x => x.Name == "Q1");
+                }                
+                _changeCommand._cells = _alphabetCells;
+                if (!_changeCommand.IsValid(currentSlideName))
+                    throw new CannotExecuteException("На каретке имеется символ вне алфавита!", currentSlideName);
+                if (_executableAlphabetCell.CurrentState.Action == null)
+                    throw new CannotExecuteException("Ожидалось действие!", 
+                        $"Элемент алфавита: {_executableAlphabetCell.Name}\nСостояние: {_executableAlphabetCell.CurrentState.Name}");
+                var actionText = _executableAlphabetCell.CurrentState.Action;
+                if (actionText == ".>.")
+                {
+                    _executableAlphabetCell = null;
+                    IsEnd = true;
+                }
+                else
+                {
+                    
+                    SlideControl slideController = _slider.Controller;
 
-            moveCommand.Execute(_executableAlphabetCell, _slider);
+                    _changeCommand.Execute(_executableAlphabetCell, _alphabetCells, _slider);
 
-            setStateCommand.Execute(_executableAlphabetCell, _alphabetCells, _slider);
-            
+                    _moveCommand.Execute(_executableAlphabetCell, _slider);
+
+                    _setStateCommand.Execute(ref _executableAlphabetCell, _alphabetCells, _slider);
+                }                              
+            }
+            catch(CannotExecuteException ex)
+            {
+                MessageBox.Show(ex.WrongActionText, $"{ex.Message}, вызвано {ex.TargetSite}"); 
+            }
         }
         #endregion
     }

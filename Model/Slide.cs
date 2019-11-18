@@ -20,7 +20,7 @@ namespace TuringMachine.Model
             _cells = new ObservableCollection<SlideCell>();
             for (int i = startIndex; i <= endIndex; i++)
             {
-                _cells.Add(new SlideCell { Number = i });
+                _cells.Add(new SlideCell { Number = i, Value=" " });
             }
             Controller = new SlideControl(Cells);
         }
@@ -30,7 +30,7 @@ namespace TuringMachine.Model
             _cells = new ObservableCollection<SlideCell>();
             for (int i = 0; i <= cellsCount; i++)
             {
-                _cells.Add(new SlideCell { Number = i });
+                _cells.Add(new SlideCell { Number = i, Value = " " });
             }
             Controller = new SlideControl(Cells);
         }
@@ -40,7 +40,7 @@ namespace TuringMachine.Model
             _cells = new ObservableCollection<SlideCell>();
             for (int i = -10; i <= 10; i++)
             {
-                _cells.Add(new SlideCell { Number = i });
+                _cells.Add(new SlideCell { Number = i, Value = " " });
             }
             Controller = new SlideControl(Cells);
         }

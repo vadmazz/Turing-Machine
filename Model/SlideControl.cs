@@ -16,7 +16,7 @@ namespace TuringMachine.Model
                 .Where(x => x.Number == 0)
                 .FirstOrDefault();
             SetActiveCell(_cells.ToList().IndexOf(index));
-                 
+            //_cells[0].Value = " ";     
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace TuringMachine.Model
             var maxCellIndex = _cells
                 .Select(x => x.Number)
                 .Max();
-            _cells.Add(new SlideCell { Number = maxCellIndex + 1});
+            _cells.Add(new SlideCell { Number = maxCellIndex + 1, Value = " "});
         }
 
         public void AddLeft(object parameter)
@@ -77,7 +77,7 @@ namespace TuringMachine.Model
             var minCellIndex = _cells
                 .Select(x => x.Number)
                 .Min();
-            var cell = new SlideCell { Number = minCellIndex - 1 };
+            var cell = new SlideCell { Number = minCellIndex - 1, Value = " " };
             var count = _cells.Count;
             for (int i = count; i >= 0; i--)
             {

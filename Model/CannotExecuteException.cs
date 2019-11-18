@@ -13,7 +13,7 @@ namespace TuringMachine.Model
         public CannotExecuteException(string message, string wrongCommand)
             : base(message)
         {
-            WrongActionText = wrongCommand;//TODO: использовать эксэпшн в Try {}catch в месте вызова Execute
+            WrongActionText = wrongCommand;
         }
     }
 }

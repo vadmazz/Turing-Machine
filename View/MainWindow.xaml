@@ -25,7 +25,7 @@
                 <MenuItem Header="Сохранить"/>
             </MenuItem>
             <MenuItem Header="Выполнить" Padding="6">
-                <MenuItem Header="Выполнить" />
+                <MenuItem Header="Выполнить" Command="{Binding RunCommand}"/>
                 <MenuItem Header="Выполнить по шагам" Command="{Binding RunStepCommand}"/>
             </MenuItem>
             <MenuItem Header="Параметры каретки" Padding="6" Command="{Binding OpenSlideCreateWindowCommand}"/>

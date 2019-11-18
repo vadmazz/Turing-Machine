@@ -5,7 +5,7 @@ namespace TuringMachine.Model.Commands
 {
     class ChangeCommand
     {
-        ObservableCollection<AlphabetCell> _cells;
+        public ObservableCollection<AlphabetCell> _cells;
         public void Execute(AlphabetCell executableCell, ObservableCollection<AlphabetCell> cells, Slide slider)
         {
             _cells = cells;
@@ -13,10 +13,9 @@ namespace TuringMachine.Model.Commands
             if (IsValid(action))
             {
                 if (action != ".")
-                    slider.Controller.UpdateCellValue(action);
-                    //slider.Cells.FirstOrDefault(x => x.IsActive).Value = action;
+                    slider.Controller.UpdateCellValue(action);                    
             }
-            else throw new CannotExecuteException("Найден несуществующий элемент алфавита!", executableCell.CurrentState.Action);
+            else throw new CannotExecuteException("Найден несуществующий элемент алфавита!", action);
         }
         /// <summary>
         /// Проверка есть ли в алфавите символ, на который требуется заменить текущий
