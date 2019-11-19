@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using TuringMachine.Model;
+using TuringMachine.View;
 using TuringMachine.ViewModel;
 
 namespace TuringMachine
@@ -53,15 +56,16 @@ namespace TuringMachine
         {            
             ResizeSlideGrid();            
         }
+
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             var VM = (MainWindowViewModel)this.DataContext;
             VM.Symbols = AlpText.Text;
             VM.AddAlphabetSymbolCommand.Execute(VM.Symbols); 
         }
-
+       
         private void AddLeftButton_Click(object sender, RoutedEventArgs e)
-        {
+        {            
             ResizeSlideGrid();
         }
 
@@ -72,8 +76,9 @@ namespace TuringMachine
             var columnIndex = e.Column.Header;
             var element = e.EditingElement as TextBox;
             var editText = element.Text;
+                 
             ActionTableMessage msg = new ActionTableMessage() { Row = rowIndex, ColumnHeader = columnIndex.ToString(), Value = editText };
-            VM.AddActionCommand.Execute(msg as object);
+            VM.AddActionCommand.Execute(msg as object);            
         }
         
     }

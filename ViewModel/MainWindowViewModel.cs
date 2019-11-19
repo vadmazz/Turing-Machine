@@ -27,13 +27,13 @@ namespace TuringMachine.ViewModel
             get { return _columnHeaders; }
             set { _columnHeaders = value; OnPropertyChanged("ColumnHeaders"); }
         }
+        
         private ObservableCollection<SlideCell> _cells;
         public ObservableCollection<SlideCell> Cells
         {
             get { return _cells; }
             set { _cells = value; OnPropertyChanged("Cells"); }
         }
-        
         public SlideCreateWindowViewModel _slideVM { get; set; }
 
         public ICommand MoveRightCommand { get; set; }
@@ -106,7 +106,7 @@ namespace TuringMachine.ViewModel
             MessageBox.Show("Машина закончила свою работу");
             _commandProcessor.IsEnd = false;
         }
-        //TODO: Рефакторинг, добавление символов и ссостояний фикс
+        //TODO: Рефакторинг, добавление символов и состояний фикс
         public void Faster(object parameter)
         {
             _commandProcessor.Speed *= 2;
@@ -125,7 +125,7 @@ namespace TuringMachine.ViewModel
 
         private void RunStep(object parameter)
         {
-            _commandProcessor.RunStep();
+            _commandProcessor.RunStep();            
             if (_commandProcessor.IsEnd)
             {
                 _commandProcessor.IsEnd = false;

@@ -119,10 +119,9 @@
             <RepeatButton Name="AddRightButton" Command="{ Binding AddRightCommand }"  Margin="3,3" Grid.Column="6" Content="+" Click="RepeatButton_Click"/>
         </Grid>
         <local:ActionsDataGrid x:Name="ActionsTable" AutoGenerateColumns="False" Grid.Row="8"
-                      ColumnHeaders="{Binding ColumnHeaders}"
+                      ColumnHeaders="{Binding ColumnHeaders}"                      
                       ItemsSource="{Binding AlphabetSymbols}"
                       CanUserAddRows="False" IsReadOnly="False" CellEditEnding="ActionsTable_CellEditEnding">
-
         </local:ActionsDataGrid>
     </Grid>
 </Window>

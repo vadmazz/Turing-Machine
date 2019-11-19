@@ -32,7 +32,7 @@ namespace TuringMachine.Model
             _states = new ObservableCollection<State>();
             AlphabetSymbols = new ObservableCollection<AlphabetCell>();
             AddState();
-            AddState();                        
+            AddState();
             AddAlphabetSymbol(" ");
         }
 
@@ -42,7 +42,7 @@ namespace TuringMachine.Model
             foreach (var item2 in _states)
             {
                 newStates.Add(new State
-                {                    
+                {
                     Name = item2.Name
                 });
             }
@@ -52,9 +52,9 @@ namespace TuringMachine.Model
                 Name = " ",
                 States = newStates
             });
-            var temp = wrap.ToArray<char>().Distinct();            
+            var temp = wrap.ToArray<char>().Distinct();
             foreach (var item in temp)
-            {                
+            {
                 if (!AlphabetSymbols.Select(x => x.Name).Contains(item.ToString()) && item != " ".ToCharArray()[0])
                 {
                     var newCell = new AlphabetCell
@@ -72,7 +72,43 @@ namespace TuringMachine.Model
                     newCell.States = statesss;
                     AlphabetSymbols.Add(newCell);
                 }
-            }            
+            }
+        }
+
+        public void AddAlphabetSymbol2(string wrap)
+        {
+            ObservableCollection<State> statesHeaders = new ObservableCollection<State>();
+            foreach (var stateHeader in _states)
+            {
+                statesHeaders.Add(stateHeader.Clone() as State);
+            }
+
+            ObservableCollection<AlphabetCell> oldCells = new ObservableCollection<AlphabetCell>();
+            foreach (var oldSymbol in AlphabetSymbols)
+            {
+                oldCells.Add(oldSymbol.Clone() as AlphabetCell);
+            }
+
+            AlphabetSymbols.Clear();
+            AlphabetSymbols.Add(new AlphabetCell
+            {
+                Name = " ",
+                States = statesHeaders
+            });                     
+
+            var temp = wrap.ToArray<char>().Distinct();
+            foreach (var item in temp)
+            {
+                if (!AlphabetSymbols.Select(x => x.Name).Contains(item.ToString()) && item != " ".ToCharArray()[0])
+                {
+                    var newCell = new AlphabetCell
+                    {
+                        Name = item.ToString()
+                    };                    
+                    newCell.States = statesHeaders;
+                    AlphabetSymbols.Add(newCell);
+                }                
+            }
         }
         public void AddState()
         {
@@ -85,19 +121,19 @@ namespace TuringMachine.Model
             {
                 item.States.Add(new State
                 {
-                    Name = $"Q{lastIndex + 2}",
+                    Name = $"Q{lastIndex + 1}",
                 });
             }
         }
         public void RemoveState()
         {
-            var lastIndex = AlphabetSymbols[0].States.Count;
+            var lastIndex = States.Count;
             if (lastIndex > 1)
             {
                 _states.Remove(_states[lastIndex - 1]);
                 foreach (var item in AlphabetSymbols)
                 {
-                    item.States = _states;
+                    item.States.Remove(item.States[lastIndex - 1]);
                 }
             }                
         }
