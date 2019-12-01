@@ -14,8 +14,7 @@ namespace TuringMachine
         private readonly Func<object, bool> _canExecute;
 
         private readonly Action<object> _onExecute;
-
-        //---Конструкторы
+        
         public RelayCommand(Action<object> execute)
         {
             _onExecute = execute;
@@ -36,8 +35,8 @@ namespace TuringMachine
 
         public void Execute(object parameter)
         {
-            if (_onExecute != null)            
-                _onExecute(parameter);            
+            _onExecute?.Invoke(parameter);
         }
     }
+    
 }

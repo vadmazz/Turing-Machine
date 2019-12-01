@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
+using System.Windows.Resources;
 using TuringMachine.Model.Commands;
 
 namespace TuringMachine.Model
@@ -19,13 +20,13 @@ namespace TuringMachine.Model
             get { return _states; }
             set { _states = value; OnPropertyChanged("States"); }
         }
+        
         public int Speed { get; set; } = 1;
-
+               
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
-            if (PropertyChanged != null)
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
         public CommandProcessor()
         {
@@ -38,7 +39,7 @@ namespace TuringMachine.Model
 
         public void AddAlphabetSymbol(string wrap)
         {
-            ObservableCollection<State> newStates = new ObservableCollection<State>();
+            var newStates = new ObservableCollection<State>();
             foreach (var item2 in _states)
             {
                 newStates.Add(new State
@@ -61,55 +62,20 @@ namespace TuringMachine.Model
                     {
                         Name = item.ToString()
                     };
-                    var statesss = new ObservableCollection<State>();
+                    var states = new ObservableCollection<State>();
                     foreach (var state in _states)
                     {
-                        statesss.Add(new State
+                        states.Add(new State
                         {
                             Name = state.Name
                         });
                     }
-                    newCell.States = statesss;
+                    newCell.States = states;
                     AlphabetSymbols.Add(newCell);
                 }
             }
         }
-
-        public void AddAlphabetSymbol2(string wrap)
-        {
-            ObservableCollection<State> statesHeaders = new ObservableCollection<State>();
-            foreach (var stateHeader in _states)
-            {
-                statesHeaders.Add(stateHeader.Clone() as State);
-            }
-
-            ObservableCollection<AlphabetCell> oldCells = new ObservableCollection<AlphabetCell>();
-            foreach (var oldSymbol in AlphabetSymbols)
-            {
-                oldCells.Add(oldSymbol.Clone() as AlphabetCell);
-            }
-
-            AlphabetSymbols.Clear();
-            AlphabetSymbols.Add(new AlphabetCell
-            {
-                Name = " ",
-                States = statesHeaders
-            });                     
-
-            var temp = wrap.ToArray<char>().Distinct();
-            foreach (var item in temp)
-            {
-                if (!AlphabetSymbols.Select(x => x.Name).Contains(item.ToString()) && item != " ".ToCharArray()[0])
-                {
-                    var newCell = new AlphabetCell
-                    {
-                        Name = item.ToString()
-                    };                    
-                    newCell.States = statesHeaders;
-                    AlphabetSymbols.Add(newCell);
-                }                
-            }
-        }
+        
         public void AddState()
         {
             var lastIndex = States.Count;
@@ -139,12 +105,13 @@ namespace TuringMachine.Model
         }
 
         #region Команды обработчика
-        Slide _slider;
-        AlphabetCell _executableAlphabetCell;
-        ObservableCollection<AlphabetCell> _alphabetCells;
-        MoveCommand _moveCommand;
-        ChangeCommand _changeCommand;
-        SetStateCommand _setStateCommand;
+
+        private Slide  _slider;
+        private AlphabetCell _executableAlphabetCell;
+        private ObservableCollection<AlphabetCell> _alphabetCells;
+        private MoveCommand _moveCommand;
+        private ChangeCommand _changeCommand;
+        private SetStateCommand _setStateCommand;
         public bool IsEnd { get; set; }
 
         public void RegisterSlide(Slide slider, ObservableCollection<AlphabetCell> cells)
@@ -183,7 +150,7 @@ namespace TuringMachine.Model
                 else
                 {
                     
-                    SlideControl slideController = _slider.Controller;
+                    var slideController = _slider.Controller;
 
                     _changeCommand.Execute(_executableAlphabetCell, _alphabetCells, _slider);
 

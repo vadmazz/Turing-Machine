@@ -8,13 +8,13 @@ namespace TuringMachine.Model
 {
     public class SlideControl
     {
-        private ObservableCollection<SlideCell> _cells;
+        private readonly ObservableCollection<SlideCell> _cells;
         public SlideControl(ObservableCollection<SlideCell> cells)
         {
             _cells = cells;
-            var index = _cells.ToList()//устанавливаем каретку в нулевой элемент
-                .Where(x => x.Number == 0)
-                .FirstOrDefault();
+            var index = _cells//устанавливаем каретку в нулевой элемент
+                .ToList()
+                .FirstOrDefault(x => x.Number == 0);
             SetActiveCell(_cells.ToList().IndexOf(index));
             //_cells[0].Value = " ";     
         }
@@ -25,7 +25,7 @@ namespace TuringMachine.Model
         /// <param name="_cells">Массив элементов каретки</param>
         /// <param name="index">Индекс активного элемента</param>
         /// <returns></returns>
-        public void SetActiveCell(int index)
+        private void SetActiveCell(int index)
         {                        
             if (HasOneActive())
             {
@@ -111,7 +111,7 @@ namespace TuringMachine.Model
         private bool HasOneActive()
         {
             var query = _cells
-                .Where(x => x.IsActive)
+                .Where(x => x.IsActive) 
                 .Select(x => x);
             if (query.Count() == 1 && query.FirstOrDefault() != null)//если только один элемент активен и есть активный
                 return true;

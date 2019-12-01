@@ -39,7 +39,8 @@
         <DockPanel x:Name="AlphabetPanel" Grid.Row="5">
             <Label VerticalContentAlignment="Center"
                    HorizontalContentAlignment="center" Content="Символы алфавита: "/>
-            <TextBox Name="AlpText" VerticalContentAlignment="center" Text="{Binding Symbols, Mode=TwoWay}" TextChanged="TextBox_TextChanged"/>
+            <TextBox Name="AlpText" VerticalContentAlignment="center" Text="{Binding Symbols, Mode=TwoWay}"
+                     TextChanged="TextBox_TextChanged"/>
         </DockPanel>
         <StackPanel  Orientation="Horizontal"  Grid.Row="7">
             <RepeatButton Content="+" Padding="10,0" Command="{Binding AddStateCommand}" Margin="5,5"/>
@@ -88,7 +89,8 @@
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image x:Name="img" Visibility="Hidden" Source="C:\Users\vadim\source\repos\TuringMachine\TuringMachine\Media\pointer_up.png"/>
+                            <Image x:Name="img" Visibility="Hidden"
+                                   Source="C:\Users\vadim\source\repos\TuringMachine\TuringMachine\Media\pointer_up.png"/>
                             <DataTemplate.Triggers>
                                 <DataTrigger Binding="{Binding IsActive}" Value="True">
                                     <Setter TargetName="img" Property="Visibility" Value="Visible"/>

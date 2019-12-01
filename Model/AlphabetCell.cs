@@ -10,11 +10,11 @@ namespace TuringMachine.Model
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
-            if (PropertyChanged != null)
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
         public ObservableCollection<State> States { get; set; }
+        
         public State CurrentState { get; set; }
         public string Name { get; set; }
         private bool _isExecute;

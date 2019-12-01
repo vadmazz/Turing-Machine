@@ -4,12 +4,7 @@ namespace TuringMachine.Model
 {
     class CannotExecuteException : Exception
     {
-        public CannotExecuteException()
-            : base()
-        {
-               
-        }
-        public string WrongActionText { get; set; }
+        public string WrongActionText { get; }
         public CannotExecuteException(string message, string wrongCommand)
             : base(message)
         {

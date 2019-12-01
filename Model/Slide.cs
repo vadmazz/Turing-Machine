@@ -13,7 +13,7 @@ namespace TuringMachine.Model
             set { _cells = value; OnPropertyChanged("Cells"); }
         }
 
-        public SlideControl Controller { get; set; }
+        public SlideControl Controller { get; }
 
         public Slide(int startIndex, int endIndex)
         {
@@ -48,8 +48,7 @@ namespace TuringMachine.Model
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
-            if (PropertyChanged != null)
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

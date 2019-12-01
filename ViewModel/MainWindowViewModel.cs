@@ -12,8 +12,8 @@ namespace TuringMachine.ViewModel
 {
     class MainWindowViewModel : INotifyPropertyChanged
     {
-        private Slide _slide { get; set; }
-        private CommandProcessor _commandProcessor { get; set; }
+        #region Properties
+        public string Speed { get; set; }
         public string Symbols { get; set; }
         private ObservableCollection<AlphabetCell> _alphabetSymbols;
         public ObservableCollection<AlphabetCell> AlphabetSymbols
@@ -34,10 +34,11 @@ namespace TuringMachine.ViewModel
             get { return _cells; }
             set { _cells = value; OnPropertyChanged("Cells"); }
         }
-        public SlideCreateWindowViewModel _slideVM { get; set; }
-
-        public ICommand MoveRightCommand { get; set; }
-        public ICommand MoveLeftCommand { get; set; }        
+        #endregion
+        
+        #region Commands
+        public ICommand MoveRightCommand { get; private set; }
+        public ICommand MoveLeftCommand { get; private set; }        
         public ICommand OpenSlideCreateWindowCommand { get; private set; }        
         public ICommand ChangeSlideCommand { get; private set; }        
         public ICommand AddRightCommand { get; private set; }        
@@ -50,12 +51,15 @@ namespace TuringMachine.ViewModel
         public ICommand AddActionCommand { get; private set; }        
         public ICommand FasterCommand { get; private set; }        
         public ICommand SlowerCommand { get; private set; }        
-
+        #endregion
+        
+        private SlideCreateWindowViewModel _slideVm;
+        private Slide _slide;
+        private CommandProcessor _commandProcessor;
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
-            if (PropertyChanged != null)
-                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }        
 
         public MainWindowViewModel()
@@ -94,7 +98,6 @@ namespace TuringMachine.ViewModel
             _alphabetSymbols[msg.Row].States.FirstOrDefault(x => x.Name == msg.ColumnHeader).Action = msg.Value;            
         }
         
-        public string Speed { get; set; }
         private async void Run(object parameter)
         {
             while (_commandProcessor.IsEnd != true)
@@ -107,13 +110,14 @@ namespace TuringMachine.ViewModel
             _commandProcessor.IsEnd = false;
         }
         //TODO: Рефакторинг, добавление символов и состояний фикс
-        public void Faster(object parameter)
+        private void Faster(object parameter)
         {
             _commandProcessor.Speed *= 2;
             Speed = $"Скорость ({_commandProcessor.Speed})";
             OnPropertyChanged("Speed");
         }
-        public void Slower(object parameter)
+
+        private void Slower(object parameter)
         {
             if (_commandProcessor.Speed >= 1)
             {
@@ -133,14 +137,14 @@ namespace TuringMachine.ViewModel
             }            
         }
 
-        public void OpenSlideCreateWindow(object parameter)
+        private void OpenSlideCreateWindow(object parameter)
         {
             var window = new SlideCreateWindow();
-            _slideVM = (SlideCreateWindowViewModel)window.DataContext;
+            _slideVm = (SlideCreateWindowViewModel)window.DataContext;
             window.Show();
         }
 
-        public void AddState(object parameter)
+        private void AddState(object parameter)
         {           
             _commandProcessor.AddState();
             var c = new ObservableCollection<string>();
@@ -151,7 +155,7 @@ namespace TuringMachine.ViewModel
             ColumnHeaders = c;            
         }
 
-        public void RemoveState(object parameter)
+        private void RemoveState(object parameter)
         {
             _commandProcessor.RemoveState();
             var c = new ObservableCollection<string>();
@@ -162,19 +166,19 @@ namespace TuringMachine.ViewModel
             ColumnHeaders = c;
         }
 
-        public void AddAlphabetSymbol(object parameter)
+        private void AddAlphabetSymbol(object parameter)
         {
             _commandProcessor.AddAlphabetSymbol(parameter.ToString());
         }
 
-        public void ChangeSlide(object parameter)
+        private void ChangeSlide(object parameter)
         {
-            if (_slideVM != null && _slideVM.CellsCount != null)
+            if (_slideVm != null && _slideVm.CellsCount != null)
             {
-                if (_slideVM.HaveMinusValues)
-                    _slide = new Slide(-int.Parse(_slideVM.CellsCount), int.Parse(_slideVM.CellsCount));
+                if (_slideVm.HaveMinusValues)
+                    _slide = new Slide(-int.Parse(_slideVm.CellsCount), int.Parse(_slideVm.CellsCount));
                 else
-                    _slide = new Slide(int.Parse(_slideVM.CellsCount));
+                    _slide = new Slide(int.Parse(_slideVm.CellsCount));
                 Cells = _slide.Cells;
                 MoveRightCommand = new RelayCommand(_slide.Controller.MoveRight);
                 MoveLeftCommand = new RelayCommand(_slide.Controller.MoveLeft);
