@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace TuringMachine.ViewModel
 {
-    class SlideCreateWindowViewModel : INotifyPropertyChanged
+    public class SlideCreateWindowViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public string CellsCount { get; set; }
@@ -34,7 +34,8 @@ namespace TuringMachine.ViewModel
 
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+            if (PropertyChanged != null)
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
     }

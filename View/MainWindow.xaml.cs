@@ -7,8 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using TuringMachine.Model;
-using TuringMachine.View;
 using TuringMachine.ViewModel;
+using TuringMachine.View;
 
 namespace TuringMachine
 {
@@ -18,7 +18,7 @@ namespace TuringMachine
     public partial class MainWindow : Window
     {
         public MainWindow()
-        {          
+        {
             DataContext = new MainWindowViewModel();
         }
 

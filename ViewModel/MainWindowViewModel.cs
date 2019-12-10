@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -10,10 +11,10 @@ using TuringMachine.View;
 
 namespace TuringMachine.ViewModel
 {
-    class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : INotifyPropertyChanged
     {
-        #region Properties
-        public string Speed { get; set; }
+        private Slide _slide { get; set; }
+        private CommandProcessor _commandProcessor { get; set; }
         public string Symbols { get; set; }
         private ObservableCollection<AlphabetCell> _alphabetSymbols;
         public ObservableCollection<AlphabetCell> AlphabetSymbols
@@ -34,11 +35,10 @@ namespace TuringMachine.ViewModel
             get { return _cells; }
             set { _cells = value; OnPropertyChanged("Cells"); }
         }
-        #endregion
-        
-        #region Commands
-        public ICommand MoveRightCommand { get; private set; }
-        public ICommand MoveLeftCommand { get; private set; }        
+        public SlideCreateWindowViewModel _slideVM { get; set; }
+
+        public ICommand MoveRightCommand { get; set; }
+        public ICommand MoveLeftCommand { get; set; }        
         public ICommand OpenSlideCreateWindowCommand { get; private set; }        
         public ICommand ChangeSlideCommand { get; private set; }        
         public ICommand AddRightCommand { get; private set; }        
@@ -50,16 +50,15 @@ namespace TuringMachine.ViewModel
         public ICommand RunCommand { get; private set; }        
         public ICommand AddActionCommand { get; private set; }        
         public ICommand FasterCommand { get; private set; }        
-        public ICommand SlowerCommand { get; private set; }        
-        #endregion
-        
-        private SlideCreateWindowViewModel _slideVm;
-        private Slide _slide;
-        private CommandProcessor _commandProcessor;
+        public ICommand SlowerCommand { get; private set; }
+        public ICommand OpenNewSliderWindow { get; private set; }
+        public event Action RunHandler; 
+
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+            if (PropertyChanged != null)
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
         }        
 
         public MainWindowViewModel()
@@ -88,7 +87,8 @@ namespace TuringMachine.ViewModel
             AddActionCommand = new RelayCommand(AddAction);
             FasterCommand = new RelayCommand(Faster);
             SlowerCommand = new RelayCommand(Slower);
-
+            OpenNewSliderWindow = new RelayCommand(OpenNewSlideWindow);
+            RunHandler += RunMet;
             _commandProcessor.RegisterSlide(_slide, _alphabetSymbols);
         }
 
@@ -98,26 +98,35 @@ namespace TuringMachine.ViewModel
             _alphabetSymbols[msg.Row].States.FirstOrDefault(x => x.Name == msg.ColumnHeader).Action = msg.Value;            
         }
         
+        public string Speed { get; set; }
         private async void Run(object parameter)
+        {
+            if (RunHandler != null) RunHandler.Invoke();
+        }
+
+        private async void RunMet()
         {
             while (_commandProcessor.IsEnd != true)
             {
                 await Task.Delay(1000 / _commandProcessor.Speed);
                 _commandProcessor.RunStep();
-                
             }
             MessageBox.Show("Машина закончила свою работу");
             _commandProcessor.IsEnd = false;
         }
         //TODO: Рефакторинг, добавление символов и состояний фикс
-        private void Faster(object parameter)
+        public void Faster(object parameter)
         {
             _commandProcessor.Speed *= 2;
             Speed = $"Скорость ({_commandProcessor.Speed})";
             OnPropertyChanged("Speed");
         }
-
-        private void Slower(object parameter)
+        public void OpenNewSlideWindow(object parameter)
+        {
+            var window = new SliderWindow(_alphabetSymbols, this);
+            window.Show();
+        }
+        public void Slower(object parameter)
         {
             if (_commandProcessor.Speed >= 1)
             {
@@ -137,14 +146,14 @@ namespace TuringMachine.ViewModel
             }            
         }
 
-        private void OpenSlideCreateWindow(object parameter)
+        public void OpenSlideCreateWindow(object parameter)
         {
             var window = new SlideCreateWindow();
-            _slideVm = (SlideCreateWindowViewModel)window.DataContext;
+            _slideVM = (SlideCreateWindowViewModel)window.DataContext;
             window.Show();
         }
 
-        private void AddState(object parameter)
+        public void AddState(object parameter)
         {           
             _commandProcessor.AddState();
             var c = new ObservableCollection<string>();
@@ -155,7 +164,7 @@ namespace TuringMachine.ViewModel
             ColumnHeaders = c;            
         }
 
-        private void RemoveState(object parameter)
+        public void RemoveState(object parameter)
         {
             _commandProcessor.RemoveState();
             var c = new ObservableCollection<string>();
@@ -166,19 +175,19 @@ namespace TuringMachine.ViewModel
             ColumnHeaders = c;
         }
 
-        private void AddAlphabetSymbol(object parameter)
+        public void AddAlphabetSymbol(object parameter)
         {
             _commandProcessor.AddAlphabetSymbol(parameter.ToString());
         }
 
-        private void ChangeSlide(object parameter)
+        public void ChangeSlide(object parameter)
         {
-            if (_slideVm != null && _slideVm.CellsCount != null)
+            if (_slideVM != null && _slideVM.CellsCount != null)
             {
-                if (_slideVm.HaveMinusValues)
-                    _slide = new Slide(-int.Parse(_slideVm.CellsCount), int.Parse(_slideVm.CellsCount));
+                if (_slideVM.HaveMinusValues)
+                    _slide = new Slide(-int.Parse(_slideVM.CellsCount), int.Parse(_slideVM.CellsCount));
                 else
-                    _slide = new Slide(int.Parse(_slideVm.CellsCount));
+                    _slide = new Slide(int.Parse(_slideVM.CellsCount));
                 Cells = _slide.Cells;
                 MoveRightCommand = new RelayCommand(_slide.Controller.MoveRight);
                 MoveLeftCommand = new RelayCommand(_slide.Controller.MoveLeft);

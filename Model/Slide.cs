@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace TuringMachine.Model
 {
-    class Slide : INotifyPropertyChanged
+    public class Slide : INotifyPropertyChanged
     {
         private ObservableCollection<SlideCell> _cells;
         public ObservableCollection<SlideCell> Cells
@@ -13,7 +13,7 @@ namespace TuringMachine.Model
             set { _cells = value; OnPropertyChanged("Cells"); }
         }
 
-        public SlideControl Controller { get; }
+        public SlideControl Controller { get; set; }
 
         public Slide(int startIndex, int endIndex)
         {
@@ -48,7 +48,8 @@ namespace TuringMachine.Model
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+            if (PropertyChanged != null)
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }
